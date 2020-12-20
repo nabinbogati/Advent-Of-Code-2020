@@ -20,6 +20,7 @@ def read_file(filename):
 
 
 def find_path():
+    """ first half puzzle solution."""
     count = 0
     result = []
 
@@ -36,14 +37,43 @@ def find_path():
     return result
 
 
+def find_path_generic(right, down):
+    """ Second half puzzle solution 
+        Finding out solutions for all slopes given
+    """
+    count = 0
+    result = []
+
+    for index in range(0, len(FOREST_MAP), down):
+        length = len(FOREST_MAP[index])
+        count += right
+
+        if count > len(FOREST_MAP[index]) - 1:
+            count = count % length
+
+        if (index + down) < len(FOREST_MAP):
+            result.append(FOREST_MAP[index+down][count])
+
+    return result.count('#')
+
+
+
 def main():
+    input_slopes = [
+        {'right': 1, 'down': 1},
+        {'right': 3, 'down': 1},
+        {'right': 5, 'down': 1},
+        {'right': 7, 'down': 1},
+        {'right': 1, 'down': 2}
+    ]
     filename = 'input_day3.txt'
+    count = 1
+
     read_file(filename)
+    for slope in input_slopes:
+        count *= find_path_generic(slope['right'], slope['down'])
 
-    result = find_path()
-
-    print(result.count('#'))
-
+    print(count)
 
 if __name__ == "__main__":
     main()
