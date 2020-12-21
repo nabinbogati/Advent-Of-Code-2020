@@ -68,7 +68,6 @@ def validate_passwords():
         if valid:
             valid_passwords += 1
 
-
     return valid_passwords
 
 
