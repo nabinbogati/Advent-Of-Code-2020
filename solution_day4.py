@@ -36,8 +36,11 @@ The fourth passport is missing two fields, cid and byr. Missing cid is fine, but
 
 According to the above rules, your improved system would report 2 valid passports.
 """
+import re
 
 CREDENTIALS = []
+
+VALID_PASSWORDS = []
 
 def read_file(filename):
     data = {}
@@ -66,17 +69,106 @@ def validate_passwords():
                 break
 
         if valid:
+            VALID_PASSWORDS.append(passwords)
             valid_passwords += 1
 
 
     return valid_passwords
 
 
+# part 2 solution
+
+def validate_byr(byr):
+    pattern = r'\d{4}'
+
+    if re.match(pattern, byr):
+        byr = int(byr)
+        if 1920 <= byr <= 2002:
+            return True
+    
+    return False
+
+    
+
+def validate_iyr(iyr):
+    pattern = r'\d{4}'
+
+    if re.match(pattern, iyr):
+        iyr = int(iyr)
+        if 2010 <= iyr <= 2020:
+            return True
+    
+    return False
+
+def validate_eyr(eyr):
+    pattern = r'\d{4}'
+
+    if re.match(pattern, eyr):
+        eyr = int(eyr)
+        if 2020 <= eyr <= 2030:
+            return True
+    
+    return False
+
+def validate_hgt(hgt):
+    if 'cm' in hgt:
+        height = int(hgt.replace('cm', ''))
+        if 150 <= height <= 193:
+            return True
+    elif 'in' in hgt:
+        height = int(hgt.replace('in', ''))
+        if 59 <= height <= 76:
+            return True
+    else:
+        return False
+    
+    return False
+
+def validate_ecl(ecl):
+    pattern = r'amb|blu|brn|gry|grn|hzl|oth'
+
+    if re.match(pattern, ecl):
+        return True
+    
+    return False
+    
+def validate_hcl(hcl):
+    pattern = r'#[0-9a-f]{6}'
+
+    if re.match(pattern, hcl):
+        return True
+    
+    return False
+
+
+def validate_pid(pid):
+    pattern = r'^\d{9}$'
+
+    if re.match(pattern, pid):
+        return True
+    
+    return False
+
+
+def validate_passwords_next():
+    valid = 0
+    for passwords in VALID_PASSWORDS:
+        if validate_byr(passwords['byr']) and validate_iyr(passwords['iyr']):
+            if validate_eyr(passwords['eyr']) and validate_hgt(passwords['hgt']):
+                if validate_hcl(passwords['hcl']) and validate_ecl(passwords['ecl']):
+                    if validate_pid(passwords['pid']):
+                        valid += 1
+    
+    return valid
+
+
+
 def main():
     filename = "input_day4.txt"
     read_file(filename)
     valid_passwords = validate_passwords()
-    print(valid_passwords)
+    valid_passwd = validate_passwords_next()
+    print(valid_passwords, valid_passwd)
 
 
 if __name__ == "__main__":
