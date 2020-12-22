@@ -72,7 +72,6 @@ def validate_passwords():
             VALID_PASSWORDS.append(passwords)
             valid_passwords += 1
 
-
     return valid_passwords
 
 
